@@ -18,6 +18,7 @@ var token string
 
 func init() {
 	token = os.Getenv("GISTPLAYGROUND_TOKEN")
+	flag.Usage = Usage
 }
 
 func NewDiskCache() *diskcache.Cache {
@@ -31,7 +32,8 @@ func main() {
 	args := flag.Args()
 
 	if len(args) < 1 {
-		fmt.Println("Error, must provide at least one argument.")
+		fmt.Println("Error: Specify a gist ID to use.\n")
+		fmt.Println("example: run 'gp 952190cba18de244b472'")
 		os.Exit(1)
 	}
 
