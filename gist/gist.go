@@ -2,6 +2,7 @@ package gist
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -58,4 +59,18 @@ func NewCachingHttpClient(token string, cache httpcache.Cache,
 		Check:     validator,
 	}
 	return &http.Client{Transport: transport}
+}
+
+func GetGist(client *github.Client, gistId string) (string, error) {
+	// passing in a url for a gist
+	gst, _, err := client.Gists.Get(gistId)
+	if err != nil {
+		return "", fmt.Errorf("Error retrieving gist: %s", err)
+	}
+	var content string
+	content, err = FindMain(gst)
+	if err != nil {
+		return "", err
+	}
+	return content, nil
 }

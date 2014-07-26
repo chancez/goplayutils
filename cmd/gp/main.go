@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/ecnahc515/gist-playground/gist"
+	"github.com/ecnahc515/gist-playground/playground"
 	"github.com/google/go-github/github"
 	"github.com/gregjones/httpcache/diskcache"
 )
@@ -38,23 +39,20 @@ func main() {
 	case "serve":
 		// set up http server
 	default:
+		id := args[0]
 		cache := NewDiskCache()
 		httpClient := gist.NewCachingHttpClient(token, cache, nil)
 		client := github.NewClient(httpClient)
-
-		// passing in a url for a gist
-		id := args[0]
-		gst, _, err := client.Gists.Get(id)
-		if err != nil {
-			fmt.Println("Error retrieving gist:", err.Error())
-			os.Exit(1)
-		}
-		var content string
-		content, err = gist.FindMain(gst)
+		content, err := gist.GetGist(client, id)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Println(content)
+		playUrl, err := playground.GetPlayUrl(&content)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(playUrl)
 	}
 }
