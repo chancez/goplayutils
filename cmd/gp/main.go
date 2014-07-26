@@ -33,11 +33,17 @@ func main() {
 	default:
 		// passing in a url for a gist
 		id := args[0]
-		gist, _, err := client.Gists.Get(id)
+		gst, _, err := client.Gists.Get(id)
 		if err != nil {
 			fmt.Println("Error retrieving gist:", err.Error())
 			os.Exit(1)
 		}
-		fmt.Println(gist)
+		var content string
+		content, err = gist.FindMain(gst)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(content)
 	}
 }
