@@ -9,11 +9,17 @@ import (
 	"github.com/google/go-github/github"
 )
 
+var token string
+
+func init() {
+	token = os.Getenv("GISTPLAYGROUND_TOKEN")
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
 
-	httpClient := gist.NewCachingHttpClient(nil, nil)
+	httpClient := gist.NewCachingHttpClient(token, nil, nil)
 	client := github.NewClient(httpClient)
 
 	if len(args) < 1 {
