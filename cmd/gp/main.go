@@ -4,10 +4,14 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/ecnahc515/gist-playground/gist"
 	"github.com/google/go-github/github"
+	"github.com/gregjones/httpcache/diskcache"
 )
+
+const cacheDir = "gist_playground_cache"
 
 var token string
 
@@ -15,12 +19,15 @@ func init() {
 	token = os.Getenv("GISTPLAYGROUND_TOKEN")
 }
 
+func NewDiskCache() *diskcache.Cache {
+	tmpDir := os.TempDir()
+	path := filepath.Join(tmpDir, cacheDir)
+	return diskcache.New(path)
+}
+
 func main() {
 	flag.Parse()
 	args := flag.Args()
-
-	httpClient := gist.NewCachingHttpClient(token, nil, nil)
-	client := github.NewClient(httpClient)
 
 	if len(args) < 1 {
 		fmt.Println("Error, must provide at least one argument.")
@@ -31,6 +38,10 @@ func main() {
 	case "serve":
 		// set up http server
 	default:
+		cache := NewDiskCache()
+		httpClient := gist.NewCachingHttpClient(token, cache, nil)
+		client := github.NewClient(httpClient)
+
 		// passing in a url for a gist
 		id := args[0]
 		gst, _, err := client.Gists.Get(id)
