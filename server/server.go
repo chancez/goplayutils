@@ -1,8 +1,11 @@
 package server
 
 import (
+	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/GeertJohan/go.rice"
 
 	"github.com/ecnahc515/goplayutils/gist"
 	"github.com/ecnahc515/goplayutils/playground"
@@ -13,7 +16,18 @@ type Server struct {
 	Client *github.Client
 }
 
-func (server *Server) indexHandler(rw http.ResponseWriter, req *http.Request) {
+func getTemplate(name string) *template.Template {
+	templateBox := rice.MustFindBox("templates")
+	templateString := templateBox.MustString(name)
+	return template.Must(template.New(name).Parse(templateString))
+}
+
+func indexHandler(rw http.ResponseWriter, req *http.Request) {
+	index := getTemplate("index.html")
+	index.Execute(rw, "")
+}
+
+func (server *Server) gistHandler(rw http.ResponseWriter, req *http.Request) {
 	gistid := req.FormValue("gistid")
 	if gistid != "" {
 		log.Println("Received request for gistid:", gistid)
@@ -27,12 +41,15 @@ func (server *Server) indexHandler(rw http.ResponseWriter, req *http.Request) {
 			http.Error(rw, err.Error(), 500)
 			return
 		}
-		rw.Write([]byte(url))
+		index := getTemplate("index.html")
+		index.Execute(rw, map[string]string{"url": url})
 	}
 }
 
 func (server *Server) registerHandlers() {
-	http.HandleFunc("/gist", server.indexHandler)
+	// http.Handle("/", http.FileServer(rice.MustFindBox("templates").HTTPBox()))
+	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/gist", server.gistHandler)
 }
 
 func (server *Server) Start(addr string) {
