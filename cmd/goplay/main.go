@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ecnahc515/gist-playground/server"
+	"github.com/ecnahc515/goplayutils/server"
 	"github.com/gregjones/httpcache/diskcache"
 )
 
