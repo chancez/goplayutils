@@ -4,11 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-
 	"os"
 	"path/filepath"
 
+	"github.com/ecnahc515/goplayutils/gist"
 	"github.com/ecnahc515/goplayutils/server"
+	"github.com/google/go-github/github"
 	"github.com/gregjones/httpcache/diskcache"
 )
 
@@ -52,6 +53,9 @@ func main() {
 			fmt.Println("-d flag requires no arguments.")
 			os.Exit(1)
 		}
+		httpClient := gist.NewCachingHttpClient(token, nil, nil)
+		client := github.NewClient(httpClient)
+		server := &server.Server{Client: client}
 		server.Start(*addr)
 	}
 
