@@ -9,8 +9,7 @@ import (
 	"github.com/google/go-github/github"
 )
 
-func handleCli(args []string) {
-	id := args[0]
+func printPlayUrlId(id string) {
 	cache := NewDiskCache()
 	httpClient := gist.NewCachingHttpClient(token, cache, nil)
 	client := github.NewClient(httpClient)
@@ -19,10 +18,15 @@ func handleCli(args []string) {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	playUrl, err := playground.GetPlayUrl(&content)
+	printPlayUrl(&content)
+}
+
+func printPlayUrl(content *string) {
+	playUrl, err := playground.GetPlayUrl(content)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	fmt.Println(playUrl)
+
 }

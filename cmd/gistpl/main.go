@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 
 	"os"
 	"path/filepath"
@@ -34,6 +35,18 @@ func main() {
 	flag.Parse()
 	args := flag.Args()
 
+	fi, err := os.Stdin.Stat()
+	if err == nil && fi.Mode()&os.ModeNamedPipe != 0 {
+		data, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		content := string(data)
+		printPlayUrl(&content)
+		os.Exit(0)
+	}
+
 	if *daemon {
 		if len(args) > 0 {
 			fmt.Println("-d flag requires no arguments.")
@@ -48,5 +61,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	handleCli(args)
+	printPlayUrlId(args[0])
 }
