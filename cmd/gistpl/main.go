@@ -3,14 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
-	"net/http"
+
 	"os"
 	"path/filepath"
 
-	"github.com/ecnahc515/gist-playground/gist"
-	"github.com/ecnahc515/gist-playground/playground"
-	"github.com/google/go-github/github"
+	"github.com/ecnahc515/gist-playground/server"
 	"github.com/gregjones/httpcache/diskcache"
 )
 
@@ -42,29 +39,14 @@ func main() {
 			fmt.Println("-d flag requires no arguments.")
 			os.Exit(1)
 		}
-		log.Println("Listening on", *addr)
-		log.Fatal(http.ListenAndServe(*addr, nil))
+		server.Start(*addr)
 	}
 
 	if len(args) < 1 {
-		fmt.Println("Error: Specify a gist ID to use.\n")
-		fmt.Println("example: run 'gp 952190cba18de244b472'")
+		fmt.Printf("Error: Specify a gist ID to use.\n\n")
+		fmt.Printf("example: run '%s 952190cba18de244b472'\n", os.Args[0])
 		os.Exit(1)
 	}
 
-	id := args[0]
-	cache := NewDiskCache()
-	httpClient := gist.NewCachingHttpClient(token, cache, nil)
-	client := github.NewClient(httpClient)
-	content, err := gist.GetGist(client, id)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	playUrl, err := playground.GetPlayUrl(&content)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println(playUrl)
+	handleCli(args)
 }
