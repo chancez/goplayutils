@@ -1,9 +1,11 @@
 package server
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/GeertJohan/go.rice"
 
@@ -41,8 +43,22 @@ func (server *Server) gistHandler(rw http.ResponseWriter, req *http.Request) {
 			http.Error(rw, err.Error(), 500)
 			return
 		}
+		res := map[string]string{"url": url}
+		ct := req.Header.Get("Content-Type")
+
+		if strings.Contains(ct, "json") {
+			err := json.NewEncoder(rw).Encode(res)
+			if err != nil {
+				http.Error(rw, err.Error(), 500)
+			}
+			return
+		}
+
 		index := getTemplate("index.html")
-		index.Execute(rw, map[string]string{"url": url})
+		index.Execute(rw, res)
+	} else {
+		http.Redirect(rw, req, "/", http.StatusFound)
+		return
 	}
 }
 
