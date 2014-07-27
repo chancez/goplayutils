@@ -7,10 +7,15 @@ import (
 )
 
 const (
-	shareUrl    = "http://play.golang.org/share"
-	contentType = "application/x-www-form-urlencoded; charset=UTF-8"
-	PlayUrl     = "http://play.golang.org/p/"
+	shareUrl     = "http://play.golang.org/share"
+	contentType  = "application/x-www-form-urlencoded; charset=UTF-8"
+	PlayUrl      = "http://play.golang.org/p/"
+	package_main = "package main"
 )
+
+func HasMain(content *string) bool {
+	return strings.Contains(*content, package_main)
+}
 
 func SendToPlayground(content *string) (string, error) {
 	buf := strings.NewReader(*content)

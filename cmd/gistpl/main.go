@@ -61,5 +61,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	printPlayUrlId(args[0])
+	gistToPlay(args[0])
 }

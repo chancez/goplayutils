@@ -9,7 +9,7 @@ import (
 	"github.com/google/go-github/github"
 )
 
-func printPlayUrlId(id string) {
+func gistToPlay(id string) {
 	cache := NewDiskCache()
 	httpClient := gist.NewCachingHttpClient(token, cache, nil)
 	client := github.NewClient(httpClient)
