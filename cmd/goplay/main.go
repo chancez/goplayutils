@@ -22,7 +22,7 @@ var (
 )
 
 func init() {
-	token = os.Getenv("GISTPLAYGROUND_TOKEN")
+	token = os.Getenv("GOPLAY_GITHUB_TOKEN")
 	flag.Usage = Usage
 }
 
