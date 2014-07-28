@@ -14,14 +14,30 @@ import (
 	"github.com/google/go-github/github"
 )
 
+var (
+	templateBox *rice.Box
+	templates   map[string]*template.Template
+)
+
+func init() {
+	templates = make(map[string]*template.Template)
+}
+
 type Server struct {
 	Client *github.Client
 }
 
 func getTemplate(name string) *template.Template {
-	templateBox := rice.MustFindBox("templates")
+	if templateBox == nil {
+		templateBox = rice.MustFindBox("templates")
+	}
 	templateString := templateBox.MustString(name)
-	return template.Must(template.New(name).Parse(templateString))
+	if tmpl, ok := templates[name]; ok {
+		return tmpl
+	} else {
+		templates[name] = template.Must(template.New(name).Parse(templateString))
+		return templates[name]
+	}
 }
 
 func indexHandler(rw http.ResponseWriter, req *http.Request) {
