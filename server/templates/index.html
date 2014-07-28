@@ -27,12 +27,11 @@
             margin-left: -120px;
             margin-top: -25px;
         }
-        h1, h2, h3 {
+        h1, h2, h3, p {
             text-align: center;
             color: #6F9EA7;
         }
-        #gistid,
-        input[type=submit] {
+        input {
             color: #37747F;
             background-color: #96BBC2;
         }
@@ -42,8 +41,9 @@
     <div id="container">
         <div id="content">
             <h1>Gist to Go Playground</h1>
+            <p>Enter a gist ID to get a <a>play.golang.org</a> url back.</p>
             <form action="/gist" method="get" accept-charset="utf-8">
-                <input id="gistid" type="text" name="gistid" size="40">
+                <input type="text" name="gistid" size="40">
                 <input type="submit">
             </form>
             {{ if . }}
