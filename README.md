@@ -19,8 +19,9 @@ You should now have the `goplay` binary in your `$GOPATH`.
 Usage
 -----
 
-`goplay` can take input in a few ways. You can provide it a `gist-id` which is the last segment after your username in a github gist. If your providing a specific revision,
-everything after your username should be used.
+`goplay` can take input in a few ways. You can provide it a `gist-id` which is
+the last segment after your username in a github gist. If your providing a
+specific revision, everything after your username should be used.
 
 #### Examples:
 
@@ -39,6 +40,31 @@ You can also use goplay on non-gists by passing in the file contents via stdin:
 
 ````
 cat somefile.go | goplay
+````
+
+#### As a Web Service:
+
+The other option is to run it as a web service which accepts http requests and
+returns a [playground][playground] url. To this you can run a command such as:
+
+````
+goplay -d --addr "0.0.0.0:8080"
+````
+
+The `-d` flag means to run as a web service, and the `--addr` flag is optional
+and lets you specify a non default host/port.
+
+Once it's running you can access the webpage at the root of localhost or the
+fqdn of the host its running on. It also accepts requests with a content type of
+`application/json` and a `gistid` query parameter at the `/gist` endpoint. It
+will then return the url in the JSON form `{"url": "play.golang.org/p/####"}`.
+
+If you have goplay running on `localhost:8080` (the default) you could run the
+following:
+
+````
+curl -H "Content-Type: application/json" "http://localhost:8080/gist?gistid=952190cba18de244b472"
+{"url":"http://play.golang.org/p/bvnGZ_Uf7g"}
 ````
 
 Caveats
