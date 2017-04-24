@@ -8,7 +8,7 @@ import (
 
 	"code.google.com/p/goauth2/oauth"
 
-	"github.com/ecnahc515/goplayutils/playground"
+	"github.com/chancez/goplayutils/playground"
 	"github.com/google/go-github/github"
 	"github.com/gregjones/httpcache"
 	"github.com/sourcegraph/apiproxy"

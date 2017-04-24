@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ecnahc515/goplayutils/gist"
-	"github.com/ecnahc515/goplayutils/server"
+	"github.com/chancez/goplayutils/gist"
+	"github.com/chancez/goplayutils/server"
 	"github.com/google/go-github/github"
 	"github.com/gregjones/httpcache/diskcache"
 )

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ecnahc515/goplayutils/gist"
-	"github.com/ecnahc515/goplayutils/playground"
+	"github.com/chancez/goplayutils/gist"
+	"github.com/chancez/goplayutils/playground"
 	"github.com/google/go-github/github"
 )
 
